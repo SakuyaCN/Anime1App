@@ -1,7 +1,9 @@
 package com.sakuya.anime1.helper
 
 import android.util.Log
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.sakuya.anime1.entity.AnimeEntity
+import com.sakuya.anime1.entity.AnimeEntityList
 import com.sakuya.anime1.http.HttpFactory
 import io.reactivex.functions.Consumer
 import org.jsoup.Jsoup
@@ -17,7 +19,7 @@ class AnimeHelper private constructor(){
         val instance = AnimeHelper()
     }
 
-    fun getMainData():ArrayList<AnimeEntity>{
+    fun getMainData(){
         val list = arrayListOf<AnimeEntity>()
         HttpFactory.getMain(Consumer {
             val doc = Jsoup.parse(it.string())
@@ -25,10 +27,10 @@ class AnimeHelper private constructor(){
             elements.forEach {
                 list.add(AnimeEntity(it.select("a").attr("href"),it.text()))
             }
+            LiveEventBus.get().with("main_data").post(AnimeEntityList(list))
 
         }, Consumer {
 
         })
-        return list
     }
 }

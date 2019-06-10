@@ -13,6 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -42,6 +43,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha06'
 
     // jsoup HTML parser library @ https://jsoup.org/
     implementation 'org.jsoup:jsoup:1.12.1'
@@ -55,5 +57,16 @@ dependencies {
 
 
     implementation 'com.shuyu:gsyVideoPlayer-java:7.0.1'
+    implementation 'com.shuyu:GSYVideoPlayer-exo2:7.0.1'
     implementation 'com.shuyu:gsyVideoPlayer-armv7a:7.0.1'
+
+    implementation 'com.jeremyliao:live-event-bus-x:1.4.4'
+
+    implementation 'me.yokeyword:fragmentationx:1.0.0'
+    implementation 'me.yokeyword:fragmentationx-core:1.0.0'
+
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0-beta05'
+    implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0-beta05'
+    implementation 'com.gyf.immersionbar:immersionbar-ktx:3.0.0-beta05'
+
 }
