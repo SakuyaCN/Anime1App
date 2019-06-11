@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     val observer = Observer<AnimeEntityList> {
         it.list.forEach {
-            Log.i("aaaaaa",it.id)
+            Log.i("aaaaaa",it.title)
         }
     }
 

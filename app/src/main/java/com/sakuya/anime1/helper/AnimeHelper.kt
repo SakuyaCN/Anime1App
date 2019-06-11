@@ -2,6 +2,7 @@ package com.sakuya.anime1.helper
 
 import android.util.Log
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.sakuya.anime1.R
 import com.sakuya.anime1.entity.AnimeEntity
 import com.sakuya.anime1.entity.AnimeEntityList
 import com.sakuya.anime1.http.HttpFactory
@@ -25,7 +26,7 @@ class AnimeHelper private constructor(){
             val doc = Jsoup.parse(it.string())
             val elements = doc.getElementById("recent-posts-6").select("li")
             elements.forEach {
-                list.add(AnimeEntity(it.select("a").attr("href"),it.text()))
+                list.add(AnimeEntity(it.select("a").attr("href"),it.text(), R.drawable.test))
             }
             LiveEventBus.get().with("main_data").post(AnimeEntityList(list))
 
