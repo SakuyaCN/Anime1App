@@ -26,7 +26,7 @@ class MainFragment : SupportFragment() {
     lateinit var tab_layout :TabLayout
     lateinit var view_Pager :ViewPager
     private val mFragments = arrayListOf<Fragment>()
-    private val titles = arrayOf("最新更新","所有","设置")
+    private val titles = arrayOf("最新更新","日推","设置")
 
     companion object{
         fun newInstance(): MainFragment {

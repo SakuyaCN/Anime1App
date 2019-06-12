@@ -269,12 +269,6 @@ abstract class SuperBottomSheetFragment : BottomSheetDialogFragment() {
 
     //region PUBLIC
 
-    open fun setFullDialog(){
-        val layoutParams = sheetContainer.layoutParams
-        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        sheetContainer.layoutParams = layoutParams
-    }
-
     @Dimension
     open fun getPeekHeight(): Int = with(context!!.getAttrId(R.attr.superBottomSheet_peekHeight)) {
         val peekHeightMin = when (this) {

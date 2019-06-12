@@ -88,4 +88,5 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     implementation "com.orhanobut:hawk:2.0.1"
+    implementation 'com.evrencoskun.library:tableview:0.8.8'
 }

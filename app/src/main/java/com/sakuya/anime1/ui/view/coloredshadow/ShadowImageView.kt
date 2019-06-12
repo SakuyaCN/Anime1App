@@ -105,7 +105,7 @@ class ShadowImageView(context: Context, attributes: AttributeSet? = null) : AppC
     }
 
     private fun makeBlurShadow() {
-        var radius = 4f
+        var radius = 7f
         radius *= 2 * radiusOffset
         val blur = BlurShadow.blur(this, width, height - dpToPx(TOP_OFFSET), radius) ?: return
         //brightness -255..255 -25 is default
@@ -126,5 +126,9 @@ class ShadowImageView(context: Context, attributes: AttributeSet? = null) : AppC
         if (shadowColor != DEFAULT_COLOR) {
             bitmapDrawable.colorFilter = PorterDuffColorFilter(shadowColor, PorterDuff.Mode.SRC_IN)
         }
+    }
+
+    fun updateradiusOffset(){
+        makeBlurShadow()
     }
 }

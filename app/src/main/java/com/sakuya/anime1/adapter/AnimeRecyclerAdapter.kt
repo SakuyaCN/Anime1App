@@ -17,7 +17,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.sakuya.anime1.entity.AnimeEntity
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.orhanobut.hawk.Hawk
 import com.sakuya.anime1.entity.bean.newAnime
 import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
 
@@ -76,11 +75,10 @@ class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Ad
             val point = Point()
             defaultDisplay.getSize(point)
             val x = point.x
-            params.width = x - x/4
+            params.width = x - x/5
             params.height = x
             img.layoutParams = params
-            if(img is ShadowImageView)
-                shadowImg.radiusOffset = 0.6f
+            shadowImg.radiusOffset = 0.5f
         }
     }
 }
