@@ -7,20 +7,19 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.*
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
-import com.jeremyliao.liveeventbus.LiveEventBus
+
+import cn.bmob.v3.BmobQuery
+import cn.bmob.v3.exception.BmobException
+import cn.bmob.v3.listener.FindListener
 import com.sakuya.anime1.R
 import com.sakuya.anime1.adapter.AnimeRecyclerAdapter
-import com.sakuya.anime1.adapter.ViewPagerAdapter
-import com.sakuya.anime1.entity.AnimeEntity
-import com.sakuya.anime1.entity.AnimeEntityList
+import com.sakuya.anime1.entity.bean.newAnime
 import com.sakuya.anime1.helper.AnimeHelper
 import com.sakuya.anime1.ui.view.StartSnapHelper
-import org.w3c.dom.Text
 
 class AnimeFragment : SupportFragment() {
 
@@ -43,12 +42,13 @@ class AnimeFragment : SupportFragment() {
     override fun onCreateView(inflater: LayoutInflater, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_anime, container, false)
         initView(view)
-        observe()
         initData()
         return view
     }
 
     private fun initView(view:View) {
+        val sheet = BottomSheetFragment()
+        sheet.show(fragmentManager!!, "DemoBottomSheetFragment")
         recyclerView = view.findViewById(R.id.recycler)
         recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = OrientationHelper.HORIZONTAL }
         StartSnapHelper().attachToRecyclerView(recyclerView)
@@ -80,17 +80,21 @@ class AnimeFragment : SupportFragment() {
         })
     }
 
-    private fun observe(){
-        LiveEventBus.get()
-            .with("main_data", AnimeEntityList::class.java)
-            .observeForever(observer)
-    }
-
     private fun initData() {
-        animeHelper.getInstance().getMainData()
+        queryObjects()
+        //animeHelper.getInstance().getMainData()
     }
 
-    val observer = Observer<AnimeEntityList> {
-        recyclerView.adapter = AnimeRecyclerAdapter(it.list)
+    private fun queryObjects() {
+        var bmobQuery: BmobQuery<newAnime> = BmobQuery()
+        bmobQuery.findObjects(object : FindListener<newAnime>() {
+            override fun done(list: MutableList<newAnime>?, ex: BmobException?) {
+                if (ex == null) {
+                    recyclerView.adapter = AnimeRecyclerAdapter(list!!)
+                } else {
+                   Log.e("error",ex.message)
+                }
+            }
+        })
     }
 }

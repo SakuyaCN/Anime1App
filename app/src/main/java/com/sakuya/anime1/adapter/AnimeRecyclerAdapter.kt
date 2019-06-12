@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.sakuya.anime1.R
-import io.github.armcha.coloredshadow.ShadowImageView
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -17,8 +16,12 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.sakuya.anime1.entity.AnimeEntity
 import android.view.WindowManager
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.orhanobut.hawk.Hawk
+import com.sakuya.anime1.entity.bean.newAnime
+import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
 
-class AnimeRecyclerAdapter (var entitys: List<AnimeEntity>): RecyclerView.Adapter<AnimeRecyclerAdapter.VH>() {
+class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Adapter<AnimeRecyclerAdapter.VH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.anime_item, parent, false)
@@ -29,9 +32,10 @@ class AnimeRecyclerAdapter (var entitys: List<AnimeEntity>): RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.itemView.tag = position
-        holder.title.text = entitys[position].title
+        holder.time.text = "更新时间：${entitys[position].updateTime}"
+        holder.title.text = entitys[position].animeName
         Glide.with(holder.shadowImg.context)
-            .load(entitys[position].img)
+            .load(entitys[position].ImgUrl)
             .placeholder(R.drawable.test)
             .error(R.drawable.test)
             .into(object : ViewTarget<ImageView, Drawable>(holder.shadowImg) {
@@ -57,20 +61,26 @@ class AnimeRecyclerAdapter (var entitys: List<AnimeEntity>): RecyclerView.Adapte
     }
 
     class VH(v: View) : RecyclerView.ViewHolder(v) {
-        val shadowImg: ShadowImageView = v.findViewById(R.id.shadow_imag)
+        var shadowImg:ShadowImageView = v.findViewById(R.id.shadow_imag)
         val title: TextView = v.findViewById(R.id.title)
+        val time: TextView = v.findViewById(R.id.time)
 
         init {
-            val params = shadowImg.layoutParams as LinearLayout.LayoutParams
-            val windowManager = shadowImg.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                setMargin(shadowImg)
+        }
+
+        fun setMargin(img:ImageView){
+            val params = img.layoutParams as ConstraintLayout.LayoutParams
+            val windowManager = img.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val defaultDisplay = windowManager.defaultDisplay
             val point = Point()
             defaultDisplay.getSize(point)
             val x = point.x
             params.width = x - x/4
             params.height = x
-            shadowImg.layoutParams = params
-            shadowImg.radiusOffset = 0.6f
+            img.layoutParams = params
+            if(img is ShadowImageView)
+                shadowImg.radiusOffset = 0.6f
         }
     }
 }

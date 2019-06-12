@@ -15,12 +15,13 @@ import com.google.android.material.tabs.TabLayout
 import com.sakuya.anime1.R
 import com.sakuya.anime1.adapter.ViewPagerAdapter
 import com.sakuya.anime1.ui.fragment.anime.AnimeFragment
+import com.sakuya.anime1.ui.fragment.setting.SettingFragment
 import com.sakuya.anime1.utils.SizeUtil
 
 class MainFragment : SupportFragment() {
 
     private val SELECT_WEIGHT = 2f
-    private val SELECT_SIZE = 22f
+    private val SELECT_SIZE = 20f
     private val UNSELECT_SIZE = 16f
     lateinit var tab_layout :TabLayout
     lateinit var view_Pager :ViewPager
@@ -49,8 +50,8 @@ class MainFragment : SupportFragment() {
         tab_layout = view.findViewById(R.id.tab_layout)
         view_Pager = view.findViewById(R.id.view_pager)
         mFragments.add(AnimeFragment.newInstance())
-        mFragments.add(AnimeFragment.newInstance())
-        mFragments.add(AnimeFragment.newInstance())
+        mFragments.add(SettingFragment.newInstance())
+        mFragments.add(SettingFragment.newInstance())
         view_Pager.adapter = ViewPagerAdapter(mFragments,fragmentManager!!)
         tab_layout.setupWithViewPager(view_Pager)
         tab_layout.post {
