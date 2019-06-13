@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:orientation="vertical"
+                                                   xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
@@ -13,9 +13,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:overScrollMode="never"
             android:scrollbars="none"
-            app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
-                      android:layout_height="match_parent">
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0">
+        <androidx.constraintlayout.widget.ConstraintLayout android:orientation="vertical"
+                                                           android:layout_width="match_parent"
+                                                           android:layout_height="match_parent">
+            <ImageSwitcher
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+                    android:id="@+id/switcher">
+                <!--<ImageView-->
+                        <!--android:id="@+id/bg"-->
+                        <!--android:scaleType="centerCrop"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"/>-->
+            </ImageSwitcher>
             <androidx.recyclerview.widget.RecyclerView
                     android:overScrollMode="never"
                     android:scrollbars="none"
@@ -24,10 +41,12 @@
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                     android:id="@+id/recycler"/>
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_marginTop="16dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    tools:layout_editor_absoluteX="-16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler" android:id="@+id/constraintLayout"
+                    android:layout_marginTop="8dp">
                 <com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
                         android:id="@+id/btn_all"
                         app:radiusOffset="0.3"
@@ -57,20 +76,22 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
+                    android:id="@+id/table_id"
                     android:textColor="@color/title"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="16dp"
                     android:textSize="20sp"
                     android:text="2019年春季(4-6月)新番"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <com.evrencoskun.tableview.TableView
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="8dp"
-                    android:id="@+id/content_container"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="20dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/day_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
+                    android:layout_height="wrap_content"
+                    tools:layout_editor_absoluteX="0dp"
+                    app:layout_constraintTop_toBottomOf="@+id/table_id">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

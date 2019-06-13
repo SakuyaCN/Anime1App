@@ -9,38 +9,32 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.sakuya.anime1.R
 import android.view.LayoutInflater
+import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.LinearLayout
+import androidx.annotation.DrawableRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
-import com.sakuya.anime1.entity.AnimeEntity
-import android.view.WindowManager
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.sakuya.anime1.entity.bean.newAnime
 import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
-import jp.wasabeef.glide.transformations.BlurTransformation
 
-class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Adapter<AnimeRecyclerAdapter.VH>() {
+class DayRecyclerAdapter (): RecyclerView.Adapter<DayRecyclerAdapter.VH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.anime_item, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.day_item, parent, false)
         return VH(v)
     }
 
-    override fun getItemCount(): Int = entitys.size
+    override fun getItemCount(): Int = 7
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.itemView.tag = position
-        holder.time.text = "更新时间：${entitys[position].updateTime}"
-        holder.title.text = entitys[position].animeName
+        holder.title.text = getPostionDay(position)
         Glide.with(holder.shadowImg.context)
-            .load(entitys[position].ImgUrl)
-            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-            .placeholder(R.drawable.test)
-            .error(R.drawable.test)
+            .load(getBackgroundColor(position))
+            .placeholder(R.drawable.jb_red)
+            .error(R.drawable.jb_red)
             .into(object : ViewTarget<ImageView, Drawable>(holder.shadowImg) {
                 override fun onLoadStarted(placeholder: Drawable?) {
                     super.onLoadStarted(placeholder)
@@ -63,26 +57,45 @@ class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Ad
             })
     }
 
+    @DrawableRes
+    fun getBackgroundColor(position: Int):Int{
+        when(position){
+            0-> return R.drawable.jb_red
+            1-> return R.drawable.jb_org
+            2-> return R.drawable.jb_yel
+            3-> return R.drawable.jb_gr
+            4-> return R.drawable.jb_bl
+            5-> return R.drawable.jb_d
+            6-> return R.drawable.jb_z
+            else -> return R.drawable.jb_red
+        }
+    }
+    fun getPostionDay(position: Int):String{
+        when(position){
+            0-> return "星期日"
+            1-> return "星期一"
+            2-> return "星期二"
+            3-> return "星期三"
+            4-> return "星期四"
+            5-> return "星期五"
+            6-> return "星期六"
+            else -> return "？？？"
+        }
+    }
+
     class VH(v: View) : RecyclerView.ViewHolder(v) {
         var shadowImg:ShadowImageView = v.findViewById(R.id.shadow_imag)
-        val title: TextView = v.findViewById(R.id.title)
-        val time: TextView = v.findViewById(R.id.time)
+        val title: TextView = v.findViewById(R.id.tv_title)
 
         init {
-                setMargin(shadowImg)
-        }
-
-        fun setMargin(img:ImageView){
-            val params = img.layoutParams as ConstraintLayout.LayoutParams
-            val windowManager = img.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val params = shadowImg.layoutParams as ConstraintLayout.LayoutParams
+            val windowManager = shadowImg.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val defaultDisplay = windowManager.defaultDisplay
             val point = Point()
             defaultDisplay.getSize(point)
             val x = point.x
             params.width = x - x/6
-            params.height = x
-            img.layoutParams = params
-            shadowImg.radiusOffset = 1f
+            shadowImg.layoutParams = params
         }
     }
 }

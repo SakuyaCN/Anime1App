@@ -6,7 +6,8 @@
                                                    android:layout_width="wrap_content"
                                                    android:layout_height="wrap_content">
     <TextView
-            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:textSize="15sp"
             android:text="1111111"
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -21,6 +22,7 @@
             app:layout_constraintTop_toBottomOf="@+id/title"
     />
     <TextView
+            android:textColor="@color/white"
             android:text="1111111"
             android:textSize="12sp"
             android:id="@+id/time"

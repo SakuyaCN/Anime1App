@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         ExoSourceManager.setSkipSSLChain(true)
         //initVideoBuilderMode()
         val list = animeHelper.getInstance().getMainData()
-        detail_player.setUp("https://i.animeone.me/MthjE.m3u8",false,"")
+        detail_player.setUp("https://msm-1251470210.cos.ap-guangzhou.myqcloud.com/16597607-1-hd.mp4?q-sign-algorithm=sha1&q-ak=AKIDt4MwvAS78VURIWPhkELOGKiueM5vFpXK&q-sign-time=1560405661;1560409261&q-key-time=1560405661;1560409261&q-header-list=&q-url-param-list=&q-signature=4c7fbfdc030abfa019df953213c5d53b51d39821&x-cos-security-token=8643c6e532795c39f0d746d91d1b7d682417756510001",false,"")
         detail_player.startPlayLogic()
 
 
