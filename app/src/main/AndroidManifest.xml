@@ -14,6 +14,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:resizeableActivity="true"
+            android:hardwareAccelerated="true"
             android:maxAspectRatio="2.4">
         <provider
                 android:name="cn.bmob.v3.util.BmobContentProvider"

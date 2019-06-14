@@ -46,6 +46,8 @@ import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.fragment_anime.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
 
@@ -114,7 +116,6 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                var firstPosition = 0
                 when(newState){
                     RecyclerView.SCROLL_STATE_SETTLING ->{
                         if (outputPortDragging){
@@ -126,16 +127,15 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
                     }
                     RecyclerView.SCROLL_STATE_IDLE ->{
                         if (!outputPortDragging){
-                            var outputPortLayoutMgr = recyclerView.layoutManager as LinearLayoutManager
+//                            var outputPortLayoutMgr = recyclerView.layoutManager as LinearLayoutManager
                             outputPortDragging = false
-                            firstPosition = outputPortLayoutMgr.findFirstVisibleItemPosition()
+//                            firstPosition = outputPortLayoutMgr.findFirstVisibleItemPosition()
 //                            Glide.with(context!!).load(list!![firstPosition].ImgUrl)
 //                                .apply(bitmapTransform(multi))
 //                                .transition(DrawableTransitionOptions.withCrossFade())
 //                                .into(bg)
                             //loadSwitcher(dlist!![firstPosition])
                             getRandNum()
-                            Log.e("randdddd",randNum.toString())
                             switcher.setImageResource(dlist!![randNum])
                         }
                     }
@@ -146,7 +146,6 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
 
     private fun getRandNum(){
         var n = (1 until dlist.size).shuffled().last()
-        Log.e("dddd22222",n.toString())
         if(n==randNum)
             randNum = when {
                 n-1<0 -> n+1
@@ -234,7 +233,7 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
                 if (ex == null) {
                     val entity = Gson().fromJson(list!![0].tableData,TableEntity::class.java)
                     table_id.text = entity.tableName
-                    day_recycler.adapter = DayRecyclerAdapter()
+                    day_recycler.adapter = DayRecyclerAdapter(entity.tableData)
                 } else {
                     Log.e("error",ex.message)
                 }

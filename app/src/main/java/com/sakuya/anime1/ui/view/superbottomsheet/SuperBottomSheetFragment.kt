@@ -57,6 +57,7 @@ abstract class SuperBottomSheetFragment : BottomSheetDialogFragment() {
     private var propertyIsSheetCancelableOnTouchOutside = true
     private var propertyIsSheetCancelable = true
     private var propertyAnimateCornerRadius = true
+    private var SheetState = BottomSheetBehavior.STATE_COLLAPSED
 
     // Bottom sheet properties
     private var canSetStatusBarColor = false
@@ -185,16 +186,23 @@ abstract class SuperBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             })
         }
-
-        // Override sheet callback events
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     setStatusBarColor(1f)
                     dialog!!.cancel()
                 }
-                if(newState == BottomSheetBehavior.STATE_SETTLING){
-                    Log.e("BottomSheetBehavior","stop")
+                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+                    if(SheetState != newState) {
+                        SheetState = BottomSheetBehavior.STATE_EXPANDED
+                        EXPANDED()
+                    }
+                }
+                if(newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    if(SheetState != newState) {
+                        SheetState = BottomSheetBehavior.STATE_COLLAPSED
+                        COLLAPSED()
+                    }
                 }
             }
 
@@ -356,5 +364,8 @@ abstract class SuperBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    abstract fun EXPANDED ()
+
+    abstract fun COLLAPSED ()
     //endregion
 }

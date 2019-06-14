@@ -105,7 +105,7 @@ class ShadowImageView(context: Context, attributes: AttributeSet? = null) : AppC
     }
 
     private fun makeBlurShadow() {
-        var radius = 7f
+        var radius = 5f
         radius *= 2 * radiusOffset
         val blur = BlurShadow.blur(this, width, height - dpToPx(TOP_OFFSET), radius) ?: return
         //brightness -255..255 -25 is default

@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayout
 import com.sakuya.anime1.R
 import com.sakuya.anime1.adapter.ViewPagerAdapter
 import com.sakuya.anime1.ui.fragment.anime.AnimeFragment
+import com.sakuya.anime1.ui.fragment.anli.AnLiFragment
 import com.sakuya.anime1.ui.fragment.setting.SettingFragment
 import com.sakuya.anime1.utils.SizeUtil
 
@@ -26,7 +27,7 @@ class MainFragment : SupportFragment() {
     lateinit var tab_layout :TabLayout
     lateinit var view_Pager :ViewPager
     private val mFragments = arrayListOf<Fragment>()
-    private val titles = arrayOf("最新更新","日推","设置")
+    private val titles = arrayOf("最新更新","安利墙","设置")
 
     companion object{
         fun newInstance(): MainFragment {
@@ -50,7 +51,7 @@ class MainFragment : SupportFragment() {
         tab_layout = view.findViewById(R.id.tab_layout)
         view_Pager = view.findViewById(R.id.view_pager)
         mFragments.add(AnimeFragment.newInstance())
-        mFragments.add(SettingFragment.newInstance())
+        mFragments.add(AnLiFragment.newInstance())
         mFragments.add(SettingFragment.newInstance())
         view_Pager.adapter = ViewPagerAdapter(mFragments,fragmentManager!!)
         tab_layout.setupWithViewPager(view_Pager)

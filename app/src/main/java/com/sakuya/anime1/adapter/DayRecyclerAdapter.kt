@@ -16,10 +16,18 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
-import com.sakuya.anime1.entity.bean.newAnime
+import com.google.android.flexbox.FlexboxLayout
 import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
+import androidx.core.view.ViewCompat
+import android.view.Gravity
+import android.graphics.Color
+import com.sakuya.anime1.utils.SizeUtil
 
-class DayRecyclerAdapter (): RecyclerView.Adapter<DayRecyclerAdapter.VH>() {
+class DayRecyclerAdapter (var array:Array<Array<String>>): RecyclerView.Adapter<DayRecyclerAdapter.VH>() {
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.day_item, parent, false)
@@ -31,6 +39,9 @@ class DayRecyclerAdapter (): RecyclerView.Adapter<DayRecyclerAdapter.VH>() {
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.itemView.tag = position
         holder.title.text = getPostionDay(position)
+        array[position].forEach {
+            holder.flex_box.addView(createNewFlexItemTextView(holder.flex_box.context,it))
+        }
         Glide.with(holder.shadowImg.context)
             .load(getBackgroundColor(position))
             .placeholder(R.drawable.jb_red)
@@ -57,36 +68,52 @@ class DayRecyclerAdapter (): RecyclerView.Adapter<DayRecyclerAdapter.VH>() {
             })
     }
 
+    private fun createNewFlexItemTextView(context: Context,str:String): TextView {
+        val textView = TextView(context)
+        textView.gravity = Gravity.LEFT
+        textView.text = str
+        textView.textSize = 12f
+        textView.setTextColor(Color.WHITE)
+        val layoutParams = FlexboxLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        val margin = SizeUtil.dp2Px(6)
+        layoutParams.setMargins(0, 0, margin, 0)
+        textView.layoutParams = layoutParams
+        return textView
+    }
+
     @DrawableRes
     fun getBackgroundColor(position: Int):Int{
-        when(position){
-            0-> return R.drawable.jb_red
-            1-> return R.drawable.jb_org
-            2-> return R.drawable.jb_yel
-            3-> return R.drawable.jb_gr
-            4-> return R.drawable.jb_bl
-            5-> return R.drawable.jb_d
-            6-> return R.drawable.jb_z
-            else -> return R.drawable.jb_red
+        return when(position){
+            0-> R.drawable.jb_red
+            1-> R.drawable.jb_org
+            2-> R.drawable.jb_yel
+            3-> R.drawable.jb_gr
+            4-> R.drawable.jb_bl
+            5-> R.drawable.jb_d
+            6-> R.drawable.jb_z
+            else -> R.drawable.jb_red
         }
     }
     fun getPostionDay(position: Int):String{
-        when(position){
-            0-> return "星期日"
-            1-> return "星期一"
-            2-> return "星期二"
-            3-> return "星期三"
-            4-> return "星期四"
-            5-> return "星期五"
-            6-> return "星期六"
-            else -> return "？？？"
+        return when(position){
+            0-> "星期日"
+            1-> "星期一"
+            2-> "星期二"
+            3-> "星期三"
+            4-> "星期四"
+            5-> "星期五"
+            6-> "星期六"
+            else -> "？？？"
         }
     }
 
     class VH(v: View) : RecyclerView.ViewHolder(v) {
         var shadowImg:ShadowImageView = v.findViewById(R.id.shadow_imag)
         val title: TextView = v.findViewById(R.id.tv_title)
-
+        val flex_box :FlexboxLayout = v.findViewById(R.id.flex_box)
         init {
             val params = shadowImg.layoutParams as ConstraintLayout.LayoutParams
             val windowManager = shadowImg.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager

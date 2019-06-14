@@ -27,11 +27,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
                     android:id="@+id/switcher">
-                <!--<ImageView-->
-                        <!--android:id="@+id/bg"-->
-                        <!--android:scaleType="centerCrop"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"/>-->
             </ImageSwitcher>
             <androidx.recyclerview.widget.RecyclerView
                     android:overScrollMode="never"

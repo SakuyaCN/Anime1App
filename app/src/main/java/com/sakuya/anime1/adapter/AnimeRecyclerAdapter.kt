@@ -69,7 +69,10 @@ class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Ad
         val time: TextView = v.findViewById(R.id.time)
 
         init {
+            shadowImg.postDelayed({
                 setMargin(shadowImg)
+            },1)
+
         }
 
         fun setMargin(img:ImageView){

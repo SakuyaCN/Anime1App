@@ -6,23 +6,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.util.DisplayMetrics
-import android.widget.TextView
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import com.sakuya.anime1.R
-
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
+import android.util.Log
+import com.airbnb.lottie.LottieAnimationView
 
 class BottomSheetFragment : SuperBottomSheetFragment(){
 
-    lateinit var title:TextView
+    private var top_view: LottieAnimationView?= null
+    @SuppressLint("ObjectAnimatorBinding")
+    override fun EXPANDED() {
+        if(top_view!=null) {
+            val animator = ObjectAnimator.ofFloat(top_view, "rotation",180f)
+            animator.duration = 300
+            animator.start()
+        }
+    }
+
+    @SuppressLint("ObjectAnimatorBinding")
+    override fun COLLAPSED() {
+        if(top_view!=null) {
+            val animator = ObjectAnimator.ofFloat(top_view, "rotation",0f)
+            animator.duration = 300
+            animator.start()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.fragment_setting, container, false)
+        val view = inflater.inflate(R.layout.fragment_all, container, false)
         initView(view)
         return view
     }
 
     fun initView(view:View){
-        title = view.findViewById(R.id.textView)
+        top_view = view.findViewById(R.id.top_view)
     }
 
     override fun isSheetCancelableOnTouchOutside(): Boolean {
@@ -38,4 +58,9 @@ class BottomSheetFragment : SuperBottomSheetFragment(){
     }
 
     override fun getStatusBarColor(): Int = Color.WHITE
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("BottomSheetBehavior", "onDestroy")
+    }
 }
