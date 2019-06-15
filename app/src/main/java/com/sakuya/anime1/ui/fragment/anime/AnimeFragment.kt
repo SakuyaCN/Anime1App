@@ -3,11 +3,14 @@ package com.sakuya.anime1.ui.fragment.anime
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import me.yokeyword.fragmentation.SupportFragment
 import android.os.Bundle
 import android.util.Log
+import android.util.Size
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
@@ -22,9 +25,11 @@ import androidx.recyclerview.widget.*
 import cn.bmob.v3.BmobQuery
 import cn.bmob.v3.exception.BmobException
 import cn.bmob.v3.listener.FindListener
+import com.bumptech.glide.GenericTransitionOptions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
@@ -43,6 +48,7 @@ import com.sakuya.anime1.entity.bean.tableView
 import com.sakuya.anime1.helper.AnimeHelper
 import com.sakuya.anime1.ui.view.StartSnapHelper
 import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
+import com.sakuya.anime1.utils.SizeUtil
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.fragment_anime.*
@@ -57,21 +63,22 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
         i.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         return i
     }
-
+    private var animeView: View? = null
     private lateinit var table_id:TextView
     private lateinit var sheet :BottomSheetFragment
     private lateinit var recyclerView:RecyclerView
     private lateinit var day_recycler:RecyclerView
-    private lateinit var btn_all:ShadowImageView
-    //private lateinit var bg:ImageView
+    private lateinit var btn_all:ImageSwitcher
     private lateinit var switcher: ImageSwitcher
     private val animeHelper = AnimeHelper
     private lateinit var multi : MultiTransformation<Bitmap>
     var outputPortDragging  = false
-    val dlist = arrayOf(R.drawable.jb_bl,R.drawable.jb_red,R.drawable.jb_d,R.drawable.jb_gr,R.drawable.jb_org,R.drawable.jb_yel,R.drawable.jb_z)
-    private var randNum = 0
     private var list: MutableList<newAnime> ?= null
-
+    private var colors = arrayOf(intArrayOf(Color.parseColor("#e0c3fc"),Color.parseColor("#8ec5fc")),
+        intArrayOf(Color.parseColor("#fbc2eb"),Color.parseColor("#a6c1ee")),intArrayOf(Color.parseColor("#fdcbf1"),Color.parseColor("#e6dee9")),
+        intArrayOf(Color.parseColor("#a1c4fd"),Color.parseColor("#a1c4fd")),intArrayOf(Color.parseColor("#a1c4fd"),Color.parseColor("#a1c4fd"))
+        ,intArrayOf(Color.parseColor("#a18cd1"),Color.parseColor("#fbc2eb")))
+    private var randNum = (1 until colors.size).shuffled().last()
     companion object{
         fun newInstance(): AnimeFragment {
             val args = Bundle()
@@ -85,6 +92,7 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
     @Nullable
     override fun onCreateView(inflater: LayoutInflater, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_anime, container, false)
+        animeView = view
         initView(view)
         initData()
         click()
@@ -94,17 +102,9 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
     private fun initView(view:View) {
         sheet = BottomSheetFragment()
         btn_all = view.findViewById(R.id.btn_all)
-        //bg = view.findViewById(R.id.bg)
-        switcher = view.findViewById(R.id.switcher)
-        switcher.setFactory(this)
-        switcher.inAnimation = AnimationUtils.loadAnimation(context,
-            R.anim.fade_in)
-        switcher.outAnimation = AnimationUtils.loadAnimation(context,
-            R.anim.fade_out)
-        switcher.setImageResource(dlist!![randNum])
+        switchInit()
         setMargin(btn_all)
         table_id = view.findViewById(R.id.table_id)
-        initializeTableView()
         recyclerView = view.findViewById(R.id.recycler)
         recyclerView.layoutManager = LinearLayoutManager(context).apply { orientation = OrientationHelper.HORIZONTAL }
         StartSnapHelper().attachToRecyclerView(recyclerView)
@@ -136,7 +136,8 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
 //                                .into(bg)
                             //loadSwitcher(dlist!![firstPosition])
                             getRandNum()
-                            switcher.setImageResource(dlist!![randNum])
+                            //currColorDrawable = GradientDrawable(GradientDrawable.Orientation.BL_TR, colors.get(randNum))
+                            setColorsDrawable()
                         }
                     }
                 }
@@ -144,19 +145,30 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
         })
     }
 
+    private fun switchInit(){
+        switcher = animeView!!.findViewById(R.id.switcher)
+        switcher.inAnimation = AnimationUtils.loadAnimation(context,
+            R.anim.fade_in)
+        switcher.outAnimation = AnimationUtils.loadAnimation(context,
+            R.anim.fade_out)
+        switcher.setFactory(this@AnimeFragment)
+        btn_all.inAnimation = AnimationUtils.loadAnimation(context,
+            R.anim.fade_in)
+        btn_all.outAnimation = AnimationUtils.loadAnimation(context,
+            R.anim.fade_out)
+        btn_all.setFactory(this@AnimeFragment)
+        setColorsDrawable()
+    }
+
     private fun getRandNum(){
-        var n = (1 until dlist.size).shuffled().last()
+        var n = (1 until colors.size).shuffled().last()
         if(n==randNum)
             randNum = when {
                 n-1<0 -> n+1
-                n+1>=dlist.size -> n-1
+                n+1>=colors.size -> n-1
                 else -> n+1
             }
         else randNum = n
-    }
-
-    private fun initializeTableView() {
-
     }
 
     private fun click() {
@@ -165,41 +177,49 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
         }
     }
 
-    fun setMargin(img: ImageView){
+    fun setColorsDrawable(){
+        switcher.apply {
+            this.setImageDrawable(GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors[randNum]).apply { this.cornerRadius = 20f })
+        }
+        btn_all.apply {
+            this.setImageDrawable(GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors[randNum]).apply { this.cornerRadius = 20f })
+        }
+//        Glide.with(context!!)
+//            .load(currColorDrawable)
+//            .skipMemoryCache(false)
+//            .transition(GenericTransitionOptions.with(R.anim.fade_out))
+//            .apply(bitmapTransform( RoundedCorners(20)))
+//            .into(object : ViewTarget<ImageView, Drawable>(btn_all) {
+//                override fun onLoadStarted(placeholder: Drawable?) {
+//                    super.onLoadStarted(placeholder)
+//                    btn_all.setImageDrawable(placeholder, withShadow = false)
+//                }
+//
+//                override fun onLoadCleared(placeholder: Drawable?) {
+//                    super.onLoadCleared(placeholder)
+//                    btn_all.setImageDrawable(placeholder, withShadow = false)
+//                }
+//
+//                override fun onLoadFailed(errorDrawable: Drawable?) {
+//                    super.onLoadFailed(errorDrawable)
+//                    btn_all.setImageDrawable(errorDrawable, withShadow = false)
+//                }
+//
+//                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+//                    btn_all.setImageDrawable(resource)
+//                }
+//            })
+    }
+
+    fun setMargin(img: ImageSwitcher){
         val params = img.layoutParams
         val windowManager = img.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val defaultDisplay = windowManager.defaultDisplay
         val point = Point()
         defaultDisplay.getSize(point)
         val x = point.x
-        params.width = x - x/6
+        params.width = x - x/6 - SizeUtil.dp2Px(40)
         img.layoutParams = params
-        if(img is ShadowImageView){
-            Glide.with(context!!)
-                .load(R.drawable.jbs1)
-                .placeholder(R.drawable.test)
-                .error(R.drawable.test)
-                .into(object : ViewTarget<ImageView, Drawable>(img) {
-                    override fun onLoadStarted(placeholder: Drawable?) {
-                        super.onLoadStarted(placeholder)
-                        img.setImageDrawable(placeholder, withShadow = false)
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        super.onLoadCleared(placeholder)
-                        img.setImageDrawable(placeholder, withShadow = false)
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        img.setImageDrawable(errorDrawable, withShadow = false)
-                    }
-
-                    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                        img.setImageDrawable(resource)
-                    }
-                })
-        }
     }
 
     private fun initData() {
@@ -216,11 +236,9 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
                     multi = MultiTransformation<Bitmap>(
                         BlurTransformation(100)
                     )
-//                    Glide.with(context!!).load(list!![0].ImgUrl)
-//                        .apply(bitmapTransform(multi))
-//                        .transition( DrawableTransitionOptions.withCrossFade())
-//                        .into(bg)
-                    //loadSwitcher(list!![0].ImgUrl!!)
+                    recyclerView.adapter.apply {
+                        switchInit()
+                    }
                 } else {
                    Log.e("error",ex.message)
                 }

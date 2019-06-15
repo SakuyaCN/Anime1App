@@ -38,7 +38,6 @@ class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Ad
         holder.title.text = entitys[position].animeName
         Glide.with(holder.shadowImg.context)
             .load(entitys[position].ImgUrl)
-            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
             .placeholder(R.drawable.test)
             .error(R.drawable.test)
             .into(object : ViewTarget<ImageView, Drawable>(holder.shadowImg) {
