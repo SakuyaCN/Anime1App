@@ -94,4 +94,7 @@ dependencies {
     implementation 'com.google.android:flexbox:1.1.0'
 
     implementation "com.airbnb.android:lottie:3.0.6"
+    implementation 'com.polyak:icon-switch:1.0.0'
+    implementation "com.github.skydoves:colorpickerpreference:2.0.0"
+
 }

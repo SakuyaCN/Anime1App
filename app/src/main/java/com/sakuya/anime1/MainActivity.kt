@@ -26,7 +26,6 @@ import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import tv.danmaku.ijk.media.exo2.ExoSourceManager
 
-
 class MainActivity : AppCompatActivity() {
 
     val animeHelper = AnimeHelper
@@ -55,6 +54,11 @@ class MainActivity : AppCompatActivity() {
         it.list.forEach {
             Log.i("aaaaaa",it.title)
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(android.R.transition.explode, android.R.transition.explode)
     }
 
 //    override fun clickForFullScreen() {

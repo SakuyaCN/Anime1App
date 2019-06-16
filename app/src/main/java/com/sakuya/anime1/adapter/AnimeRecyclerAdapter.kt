@@ -1,6 +1,7 @@
 package com.sakuya.anime1.adapter
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +18,10 @@ import com.bumptech.glide.request.transition.Transition
 import com.sakuya.anime1.entity.AnimeEntity
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.orhanobut.hawk.Hawk
 import com.sakuya.anime1.entity.bean.newAnime
 import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -33,6 +36,14 @@ class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Ad
     override fun getItemCount(): Int = entitys.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
+        if(Hawk.get("isColorful")){
+            holder.time.setTextColor(ContextCompat.getColor(holder.time.context, R.color.white))
+            holder.title.setTextColor(ContextCompat.getColor(holder.title.context, R.color.white))
+        }else{
+            holder.time.setTextColor(ContextCompat.getColor(holder.time.context, R.color.title))
+            holder.title.setTextColor(ContextCompat.getColor(holder.title.context, R.color.title))
+        }
+
         holder.itemView.tag = position
         holder.time.text = "更新时间：${entitys[position].updateTime}"
         holder.title.text = entitys[position].animeName
@@ -68,10 +79,7 @@ class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Ad
         val time: TextView = v.findViewById(R.id.time)
 
         init {
-            shadowImg.postDelayed({
-                setMargin(shadowImg)
-            },1)
-
+            setMargin(shadowImg)
         }
 
         fun setMargin(img:ImageView){
@@ -84,7 +92,7 @@ class AnimeRecyclerAdapter (var entitys: MutableList<newAnime>): RecyclerView.Ad
             params.width = x - x/6
             params.height = x
             img.layoutParams = params
-            shadowImg.radiusOffset = 1f
+            shadowImg.radiusOffset = 0.6f
         }
     }
 }

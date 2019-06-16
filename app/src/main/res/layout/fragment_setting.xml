@@ -4,13 +4,43 @@
                                                    xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <TextView
-            android:text="所有动漫"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-    />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+                                           android:layout_height="match_parent">
+        <LinearLayout android:padding="18dp" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+            <TextView
+                    android:textSize="18sp"
+                    android:textColor="@color/title"
+                    android:text="主题颜色"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+           <LinearLayout android:layout_marginTop="4dp" android:orientation="horizontal" android:gravity="center" android:layout_width="match_parent" android:layout_height="40dp">
+               <TextView
+                       android:textColor="@color/colorPrimary_2"
+                       android:text="亮瞎眼的五颜六色模式"
+                       android:layout_weight="1"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"/>
+               <com.polyak.iconswitch.IconSwitch
+                       android:clickable="true"
+                       app:isw_background_color="@color/colorPrimary_2"
+                       app:isw_thumb_color_left="#96e6a1"
+                       app:isw_thumb_color_right="#ff9a9e"
+                       android:id="@+id/icon_switch"
+                       android:layout_width="60dp"
+                       android:layout_height="wrap_content"
+               />
+           </LinearLayout>
+            <LinearLayout android:layout_marginTop="8dp" android:orientation="horizontal" android:gravity="center" android:layout_width="match_parent" android:layout_height="40dp">
+                <TextView
+                        android:textColor="@color/colorPrimary_2"
+                        android:text="自定义主题颜色"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                <LinearLayout android:gravity="center" android:layout_width="60dp" android:layout_height="25dp" >
+                    <View android:id="@+id/view_bg_color" android:layout_width="25dp" android:layout_height="25dp" android:background="@color/colorPrimary_2"></View>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

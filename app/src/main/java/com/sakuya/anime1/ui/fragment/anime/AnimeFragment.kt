@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import me.yokeyword.fragmentation.SupportFragment
@@ -19,6 +20,8 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.*
 
@@ -39,6 +42,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.evrencoskun.tableview.TableView
 import com.evrencoskun.tableview.adapter.AbstractTableAdapter
 import com.google.gson.Gson
+import com.orhanobut.hawk.Hawk
 import com.sakuya.anime1.R
 import com.sakuya.anime1.adapter.AnimeRecyclerAdapter
 import com.sakuya.anime1.adapter.DayRecyclerAdapter
@@ -74,12 +78,14 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
     private lateinit var multi : MultiTransformation<Bitmap>
     var outputPortDragging  = false
     private var list: MutableList<newAnime> ?= null
-    private var colors = arrayOf(intArrayOf(Color.parseColor("#e0c3fc"),Color.parseColor("#8ec5fc")),
-        intArrayOf(Color.parseColor("#fbc2eb"),Color.parseColor("#a6c1ee")),intArrayOf(Color.parseColor("#fdcbf1"),Color.parseColor("#e6dee9")),
-        intArrayOf(Color.parseColor("#a1c4fd"),Color.parseColor("#a1c4fd")),intArrayOf(Color.parseColor("#a1c4fd"),Color.parseColor("#a1c4fd"))
-        ,intArrayOf(Color.parseColor("#a18cd1"),Color.parseColor("#fbc2eb")))
-    private var randNum = (1 until colors.size).shuffled().last()
+
     companion object{
+        var colors = arrayOf(intArrayOf(Color.parseColor("#e0c3fc"),Color.parseColor("#8ec5fc")),
+            intArrayOf(Color.parseColor("#fbc2eb"),Color.parseColor("#a6c1ee")),intArrayOf(Color.parseColor("#f6d365"),Color.parseColor("#fda085")),
+            intArrayOf(Color.parseColor("#a1c4fd"),Color.parseColor("#c2e9fb")),intArrayOf(Color.parseColor("#a3bded"),Color.parseColor("#6991c7"))
+            ,intArrayOf(Color.parseColor("#a18cd1"),Color.parseColor("#fbc2eb")),intArrayOf(Color.parseColor("#89f7fe"),Color.parseColor("#66a6ff")))
+        var randNum = (1 until colors.size).shuffled().last()
+
         fun newInstance(): AnimeFragment {
             val args = Bundle()
 
@@ -102,7 +108,6 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
     private fun initView(view:View) {
         sheet = BottomSheetFragment()
         btn_all = view.findViewById(R.id.btn_all)
-        switchInit()
         setMargin(btn_all)
         table_id = view.findViewById(R.id.table_id)
         recyclerView = view.findViewById(R.id.recycler)
@@ -112,7 +117,13 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
         day_recycler = view.findViewById(R.id.day_recycler)
         day_recycler.layoutManager = LinearLayoutManager(context).apply { orientation = OrientationHelper.HORIZONTAL }
         StartSnapHelper().attachToRecyclerView(day_recycler)
+        switchInit()
+        if(Hawk.get("isColorful")){
+            setAdapter()
+        }
+    }
 
+    fun setAdapter(){
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -126,7 +137,7 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
                         outputPortDragging = true
                     }
                     RecyclerView.SCROLL_STATE_IDLE ->{
-                        if (!outputPortDragging){
+                        if (!outputPortDragging&&Hawk.get("isColorful")){
 //                            var outputPortLayoutMgr = recyclerView.layoutManager as LinearLayoutManager
                             outputPortDragging = false
 //                            firstPosition = outputPortLayoutMgr.findFirstVisibleItemPosition()
@@ -134,18 +145,23 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
 //                                .apply(bitmapTransform(multi))
 //                                .transition(DrawableTransitionOptions.withCrossFade())
 //                                .into(bg)
-                            //loadSwitcher(dlist!![firstPosition])
                             getRandNum()
-                            //currColorDrawable = GradientDrawable(GradientDrawable.Orientation.BL_TR, colors.get(randNum))
                             setColorsDrawable()
+//                            day_recycler.forEach {
+//                                var img = it.findViewById(R.id.shadow_imag) as ImageSwitcher
+//                                img.setImageDrawable(GradientDrawable(GradientDrawable.Orientation.TR_BL, colors[randNum]).apply { this.cornerRadius = 30f })
+//                            }
+                            day_recycler.adapter!!.notifyItemRangeChanged(0,day_recycler.childCount)
                         }
                     }
                 }
             }
         })
+
     }
 
     private fun switchInit(){
+
         switcher = animeView!!.findViewById(R.id.switcher)
         switcher.inAnimation = AnimationUtils.loadAnimation(context,
             R.anim.fade_in)
@@ -178,37 +194,24 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
     }
 
     fun setColorsDrawable(){
-        switcher.apply {
-            this.setImageDrawable(GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors[randNum]).apply { this.cornerRadius = 20f })
+        if(Hawk.get("isColorful")) {
+            switcher.setImageDrawable(
+                GradientDrawable(
+                    GradientDrawable.Orientation.TR_BL,
+                    colors[randNum]
+                ))
+            btn_all.setImageDrawable(
+                GradientDrawable(
+                    GradientDrawable.Orientation.TR_BL,
+                    colors[randNum]
+                ).apply { this.cornerRadius = 20f })
+        }else{
+            Glide.with(context!!)
+                .load(ColorDrawable(ContextCompat.getColor(context!!, R.color.colorPrimary_2)))
+                .apply(bitmapTransform( RoundedCorners(20)))
+                .into(btn_all.currentView as ImageView)
+
         }
-        btn_all.apply {
-            this.setImageDrawable(GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors[randNum]).apply { this.cornerRadius = 20f })
-        }
-//        Glide.with(context!!)
-//            .load(currColorDrawable)
-//            .skipMemoryCache(false)
-//            .transition(GenericTransitionOptions.with(R.anim.fade_out))
-//            .apply(bitmapTransform( RoundedCorners(20)))
-//            .into(object : ViewTarget<ImageView, Drawable>(btn_all) {
-//                override fun onLoadStarted(placeholder: Drawable?) {
-//                    super.onLoadStarted(placeholder)
-//                    btn_all.setImageDrawable(placeholder, withShadow = false)
-//                }
-//
-//                override fun onLoadCleared(placeholder: Drawable?) {
-//                    super.onLoadCleared(placeholder)
-//                    btn_all.setImageDrawable(placeholder, withShadow = false)
-//                }
-//
-//                override fun onLoadFailed(errorDrawable: Drawable?) {
-//                    super.onLoadFailed(errorDrawable)
-//                    btn_all.setImageDrawable(errorDrawable, withShadow = false)
-//                }
-//
-//                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-//                    btn_all.setImageDrawable(resource)
-//                }
-//            })
     }
 
     fun setMargin(img: ImageSwitcher){
@@ -236,9 +239,6 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
                     multi = MultiTransformation<Bitmap>(
                         BlurTransformation(100)
                     )
-                    recyclerView.adapter.apply {
-                        switchInit()
-                    }
                 } else {
                    Log.e("error",ex.message)
                 }
@@ -257,33 +257,5 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
                 }
             }
         })
-    }
-
-    fun loadSwitcher(url:Int){
-        Glide.with(context!!)
-            .load(url)
-            .dontAnimate()
-            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-            .apply(bitmapTransform(multi))
-            .into(object : ViewTarget<ImageView, Drawable>(switcher.currentView as ImageView) {
-                override fun onLoadStarted(placeholder: Drawable?) {
-                    super.onLoadStarted(placeholder)
-                    switcher.setImageDrawable(placeholder)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    super.onLoadCleared(placeholder)
-                    switcher.setImageDrawable(placeholder)
-                }
-
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    super.onLoadFailed(errorDrawable)
-                    switcher.setImageDrawable(errorDrawable)
-                }
-
-                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                    switcher.setImageDrawable(resource)
-                }
-            })
     }
 }

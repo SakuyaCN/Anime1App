@@ -21,6 +21,7 @@ import com.sakuya.anime1.ui.fragment.anime.AnimeFragment
 import com.sakuya.anime1.ui.fragment.anli.AnLiFragment
 import com.sakuya.anime1.ui.fragment.setting.SettingFragment
 import android.animation.LayoutTransition
+import com.jeremyliao.liveeventbus.LiveEventBus
 
 class MainFragment : SupportFragment() {
 
@@ -79,7 +80,7 @@ class MainFragment : SupportFragment() {
                     textview.textSize = UNSELECT_SIZE
                 }
 
-                tabAt.customView!!.findViewById<TextView>(R.id.tv_tab).text = titles[index]
+                tabAt.customView!!.findViewById<TextView>(com.sakuya.anime1.R.id.tv_tab).text = titles[index]
             }
         }
         tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
@@ -102,6 +103,7 @@ class MainFragment : SupportFragment() {
             }
 
         })
+        LiveEventBus.get().with("colorful").post(true)
     }
 
     fun changeTabStyle(tab: TabLayout.Tab,isSelect:Boolean){

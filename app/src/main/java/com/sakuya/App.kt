@@ -13,5 +13,12 @@ class App:Application() {
         super.onCreate()
         Bmob.initialize(this,"d303d4c853adfc969a9afebee70a53e9")
         Hawk.init(this).build()
+        setting()
+    }
+
+    fun setting(){
+        if(!Hawk.contains("isColorful")){
+            Hawk.put("isColorful",false)
+        }
     }
 }

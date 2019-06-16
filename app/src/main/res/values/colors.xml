@@ -4,8 +4,11 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
-    <color name="white">#FFFFFF</color>
-    <color name="title">#373A6D</color>
+    <color name="white">#fff</color>
+    <color name="title">#112d4e</color>
+    <color name="colorPrimary_2">#7a7a7a</color>
+
+
     <color name="pal_color_1">#E67399</color>
     <color name="pal_color_2">#FFDD92</color>
     <color name="pal_color_3">#D9C8A7</color>
