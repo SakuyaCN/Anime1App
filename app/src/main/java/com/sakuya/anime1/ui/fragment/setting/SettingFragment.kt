@@ -48,10 +48,10 @@ class SettingFragment : SupportFragment() {
 
     private fun initHawk(){
         if(Hawk.get("isColorful")) {
-            icon_switch.checked = IconSwitch.Checked.RIGHT
+            icon_switch.checked = IconSwitch.Checked.LEFT
         }
         else {
-            icon_switch.checked = IconSwitch.Checked.LEFT
+            icon_switch.checked = IconSwitch.Checked.RIGHT
         }
         icon_switch.setCheckedChangeListener {
             if(Hawk.get("isColorful")) {

@@ -1,7 +1,9 @@
 package com.sakuya.anime1.ui.fragment.anli
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Point
 import me.yokeyword.fragmentation.SupportFragment
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +11,11 @@ import android.util.Log
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.annotation.Nullable
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.ViewPager
 import cn.bmob.v3.BmobQuery
 import cn.bmob.v3.exception.BmobException
@@ -23,6 +29,8 @@ import com.sakuya.anime1.entity.bean.newAnime
 import com.sakuya.anime1.entity.bean.songShare
 import com.sakuya.anime1.ui.view.cardpager.CardPagerAdapter
 import com.sakuya.anime1.ui.view.cardpager.ShadowTransformer
+import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
+import com.sakuya.anime1.utils.SizeUtil
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 
@@ -66,7 +74,6 @@ class AnLiFragment : SupportFragment() {
         viewPager = view.findViewById(R.id.viewPager)
         btn_more = view.findViewById(R.id.more_view)
         btn_srarch = view.findViewById(R.id.search_view)
-
     }
 
     private fun initData() {
