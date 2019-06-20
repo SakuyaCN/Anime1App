@@ -13,9 +13,6 @@ import me.yokeyword.fragmentation.SupportFragment
 open class BaseFragment:SupportFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        LiveEventBus.get().with("colorful").observeStickyForever(Observer {
-            Toast.makeText(context!!,container!!.size,Toast.LENGTH_SHORT).show()
-        })
         return super.onCreateView(inflater, container, savedInstanceState)
 
     }

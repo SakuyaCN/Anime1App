@@ -17,8 +17,13 @@ class App:Application() {
     }
 
     fun setting(){
-        if(!Hawk.contains("isColorful")){
+        if(!Hawk.contains("isColorful"))
             Hawk.put("isColorful",false)
+        if(!Hawk.contains("card_color"))
+            Hawk.put("card_color","#7a7a7a")
+        if(!Hawk.contains("colors")){
+            Hawk.put("colors", arrayOf("#7a7a7a","#4f3a65","#e4007c","#6b48ff","#12d3cf","#e41749","#211717","#ffc785","#a9eec2"))
         }
+
     }
 }

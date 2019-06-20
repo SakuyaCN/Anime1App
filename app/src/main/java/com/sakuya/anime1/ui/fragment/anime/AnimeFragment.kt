@@ -161,7 +161,6 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
     }
 
     private fun switchInit(){
-
         switcher = animeView!!.findViewById(R.id.switcher)
         switcher.inAnimation = AnimationUtils.loadAnimation(context,
             R.anim.fade_in)
@@ -207,7 +206,7 @@ class AnimeFragment : SupportFragment() , ViewSwitcher.ViewFactory {
                 ).apply { this.cornerRadius = 20f })
         }else{
             Glide.with(context!!)
-                .load(ColorDrawable(ContextCompat.getColor(context!!, R.color.colorPrimary_2)))
+                .load(ColorDrawable(Color.parseColor(Hawk.get("card_color"))))
                 .apply(bitmapTransform( RoundedCorners(20)))
                 .into(btn_all.currentView as ImageView)
 

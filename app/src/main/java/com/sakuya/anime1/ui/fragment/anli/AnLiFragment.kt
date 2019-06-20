@@ -33,7 +33,6 @@ import com.sakuya.anime1.ui.view.coloredshadow.ShadowImageView
 import com.sakuya.anime1.utils.SizeUtil
 import jp.wasabeef.glide.transformations.BlurTransformation
 
-
 class AnLiFragment : SupportFragment() {
 
     private var mCardShadowTransformer: ShadowTransformer? = null

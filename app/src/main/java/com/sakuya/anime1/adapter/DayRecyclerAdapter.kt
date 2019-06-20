@@ -57,7 +57,7 @@ class DayRecyclerAdapter (var array:Array<Array<String>>): RecyclerView.Adapter<
             holder.shadowImg.setImageDrawable(GradientDrawable(GradientDrawable.Orientation.TR_BL, AnimeFragment.colors[AnimeFragment.randNum]).apply { this.cornerRadius = 20f })
         else
             Glide.with(holder.shadowImg.context)
-                .load(ColorDrawable(ContextCompat.getColor(holder.shadowImg.context, R.color.colorPrimary_2)))
+                .load(ColorDrawable(Color.parseColor(Hawk.get("card_color"))))
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
                 .into(holder.shadowImg.currentView as ImageView)
 //        Glide.with(holder.shadowImg.context)
